@@ -145,14 +145,14 @@
 
     <!-- LÓGICA DO APLICATIVO -->
     <script>
-        // CONFIGURAÇÃO DO FIREBASE (Substitua com suas credenciais do console do Firebase)
+        // CONFIGURAÇÃO DO FIREBASE (Atualizada com as suas chaves)
         const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            projectId: "SEU_PROJETO",
-            storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "SEU_SENDER_ID",
-            appId: "SEU_APP_ID"
+            apiKey: "AIzaSyAyW6hcsi-seY42aJ0pqq-f1GgGt3_sgOI",
+            authDomain: "zap-divulga.firebaseapp.com",
+            projectId: "zap-divulga",
+            storageBucket: "zap-divulga.firebasestorage.app",
+            messagingSenderId: "136104188019",
+            appId: "1:136104188019:web:3345cfb0114bd780d7f206"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -164,15 +164,15 @@
         };
 
         function carregarGrupos() {
-            db.collection("grupos").where("ativo", "==", true).orderBy("criadoEm", "desc").onSnapshot((snapshot) => {
+            db.collection("grupos").where("ativo", "==", true).onSnapshot((snapshot) => {
                 todosGrupos = [];
                 snapshot.forEach((doc) => {
                     todosGrupos.push({ id: doc.id, ...doc.data() });
                 });
                 renderizarGrupos(todosGrupos);
             }, (error) => {
-                console.log("Erro ao carregar do Firestore. Verifique as configurações do Firebase.");
-                document.getElementById('contadorGrupos').innerText = "Configure o Firebase para exibir os grupos salvos.";
+                console.log("Erro ao carregar do Firestore: ", error);
+                document.getElementById('contadorGrupos').innerText = "Erro ao conectar ao banco de dados.";
             });
         }
 
@@ -224,12 +224,15 @@
         function avancarParaPix(e) {
             e.preventDefault();
             document.getElementById('etapaFormulario').classList.add('hidden');
-            document.getElementById('etapaPix').classList.remove('hidden');
+            document.getElementById('etapaPix').classList.add('hidden');
+
+            // Salva provisoriamente ou envia direto
+            enviarComprovanteWhatsApp();
         }
 
         function voltarParaFormulario() {
             document.getElementById('etapaFormulario').classList.remove('hidden');
-            document.getElementById('etapaPix').classList.add('hidden');
+            document.getElementById('etapaPix').classList.remove('hidden'); // Ajustado para exibir a etapa correta
         }
 
         function copiarChavePix() {
